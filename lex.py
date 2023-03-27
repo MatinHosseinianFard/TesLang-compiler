@@ -89,26 +89,24 @@ def t_INTEGER(t):
 
 
 def t_STRING(t):
-    # The first regular expression matches text that begins with a double-quote,
+    # The first expression matches text that begins with a double-quote,
     # followed by any number of characters that are not double-quotes or newline characters,
     # and ends with a double-quote.
-    r'"[^"\n]*"'
-
-    # The second regular expression matches text that begins with a single-quote,
+    # The second expression matches text that begins with a single-quote,
     # followed by any number of characters that are not single-quotes or newline characters,
     # and ends with a single-quote.
-    r"'[^'\n]*'"
+    r'"[^"\n]*"|\'[^\'\n]*\''
 
     # Define two regular expressions for matching strings in single or double quotes
     t_STRING_RE1 = r'"[^"\n]*"'
-    t_STRING_RE2 = r"'[^'\n]*'"
+    t_STRING_RE2 = r'\'[^\'\n]*\''
 
     # Define a dictionary for escape sequences in string literals
     escape_dict = {'\\n': '\n', '\\t': '\t',
                    '\\r': '\r', '\\\\': '\\', '\\"': '\"'}
 
     # Use re.match() to match the input string to the two regex patterns
-    match = re.match(t_STRING_RE1, t.value)
+    match = re.match(t_STRING_RE1, t.value) or re.match(t_STRING_RE2, t.value)
 
     # If there is a match to the first pattern, extract the string and replace escape sequences with their respective characters
     if match:
@@ -144,6 +142,7 @@ def t_error(t):
 lexer = lex.lex()
 data = """def int sum(vector numList) {
 var int result = 0;
+var str c = "Hello, World!";
 for (i = 0 to length(numList)) {
 result = result + numList[i];
 }
