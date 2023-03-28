@@ -7,7 +7,7 @@ tokens = (
     'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE', 'LBRACKET', 'RBRACKET',
     'COMMA', 'COLON', 'SEMICOLON',
     'VAR', 'RETURN',
-    'FOR', 'TO', 'DEF',
+    'FOR', 'WHILE', 'TO', 'DEF', 'IF', 'ELSE',
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MOD',
     'ASSIGN', 'EQ', 'NEQ', 'LT', 'LTE', 'GT', 'GTE', 'AND', 'OR', 'NOT',
     'QUESTIONMARK',
@@ -42,9 +42,12 @@ t_LTE = r'<='
 t_GT = r'>'
 t_GTE = r'>='
 t_FOR = r'for'
+t_WHILE = r'while'
 t_TO = r'to'
 t_VAR = r'var'
 t_DEF = r'def'
+t_IF = r'if'
+t_ELSE = r'else'
 t_RETURN = r'return'
 t_INT_TYPE = r'int'
 t_VECTOR_TYPE = r'vector'
