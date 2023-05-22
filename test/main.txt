@@ -1,0 +1,9 @@
+def int find(vector A, int n) {
+var int k;
+var float j;for (i = 0 to length(A)) {
+if (n == k) {
+return j;
+}
+j = j + 1;
+}return -1;
+}
