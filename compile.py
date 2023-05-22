@@ -48,7 +48,7 @@ class Compiler(object):
 
 
 if __name__ == '__main__':
-    with open("./test/main.txt") as f:
+    with open("./test/parser.txt") as f:
         data = f.read()
         f.close()
     compiler = Compiler()

@@ -15,7 +15,7 @@ Rule 5     func_choice -> LBRACE body RBRACE
 Rule 6     func_choice -> RETURN expr SEMICOLON
 Rule 7     body -> empty
 Rule 8     body -> stmt body
-Rule 9     body -> stmt error
+Rule 9     body -> error body
 Rule 10    stmt -> expr SEMICOLON
 Rule 11    stmt -> error SEMICOLON
 Rule 12    stmt -> defvar SEMICOLON
@@ -123,7 +123,7 @@ error                : 4 9 11 14 18 20 38 40 42 62
 
 Nonterminals, with rules where they appear
 
-body                 : 5 8 22
+body                 : 5 8 9 22
 clist                : 32 39 61
 defvar               : 12
 defvar_choice        : 24
@@ -136,7 +136,7 @@ func_choice          : 3 4
 iden                 : 3 4 19 20 24 28 29 60 61 62
 num                  : 63
 prog                 : 2 0
-stmt                 : 8 9 13 14 16 17 18 19 20
+stmt                 : 8 13 14 16 17 18 19 20
 str                  : 64
 type                 : 3 4 24 28 29
 
@@ -423,7 +423,7 @@ state 23
     (5) func_choice -> LBRACE . body RBRACE
     (7) body -> . empty
     (8) body -> . stmt body
-    (9) body -> . stmt error
+    (9) body -> . error body
     (68) empty -> .
     (10) stmt -> . expr SEMICOLON
     (11) stmt -> . error SEMICOLON
@@ -472,8 +472,8 @@ state 23
     (67) num -> . NUMBER
     (66) str -> . STRING
 
-    RBRACE          reduce using rule 68 (empty -> .)
     error           shift and go to state 31
+    RBRACE          reduce using rule 68 (empty -> .)
     IF              shift and go to state 34
     WHILE           shift and go to state 35
     FOR             shift and go to state 36
@@ -583,7 +583,7 @@ state 27
     (22) stmt -> LBRACE . body RBRACE
     (7) body -> . empty
     (8) body -> . stmt body
-    (9) body -> . stmt error
+    (9) body -> . error body
     (68) empty -> .
     (10) stmt -> . expr SEMICOLON
     (11) stmt -> . error SEMICOLON
@@ -632,8 +632,8 @@ state 27
     (67) num -> . NUMBER
     (66) str -> . STRING
 
-    RBRACE          reduce using rule 68 (empty -> .)
     error           shift and go to state 31
+    RBRACE          reduce using rule 68 (empty -> .)
     IF              shift and go to state 34
     WHILE           shift and go to state 35
     FOR             shift and go to state 36
@@ -676,10 +676,9 @@ state 29
 state 30
 
     (8) body -> stmt . body
-    (9) body -> stmt . error
     (7) body -> . empty
     (8) body -> . stmt body
-    (9) body -> . stmt error
+    (9) body -> . error body
     (68) empty -> .
     (10) stmt -> . expr SEMICOLON
     (11) stmt -> . error SEMICOLON
@@ -728,7 +727,7 @@ state 30
     (67) num -> . NUMBER
     (66) str -> . STRING
 
-    error           shift and go to state 53
+    error           shift and go to state 31
     RBRACE          reduce using rule 68 (empty -> .)
     IF              shift and go to state 34
     WHILE           shift and go to state 35
@@ -757,10 +756,86 @@ state 30
 
 state 31
 
+    (9) body -> error . body
     (11) stmt -> error . SEMICOLON
+    (7) body -> . empty
+    (8) body -> . stmt body
+    (9) body -> . error body
+    (68) empty -> .
+    (10) stmt -> . expr SEMICOLON
+    (11) stmt -> . error SEMICOLON
+    (12) stmt -> . defvar SEMICOLON
+    (13) stmt -> . IF LPAREN expr RPAREN stmt else_choice
+    (14) stmt -> . IF LPAREN error RPAREN stmt else_choice
+    (17) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (18) stmt -> . WHILE LPAREN error RPAREN stmt
+    (19) stmt -> . FOR LPAREN iden ASSIGN expr TO expr RPAREN stmt
+    (20) stmt -> . FOR LPAREN iden ASSIGN error TO expr RPAREN stmt
+    (21) stmt -> . RETURN expr SEMICOLON
+    (22) stmt -> . LBRACE body RBRACE
+    (23) stmt -> . func
+    (37) expr -> . expr LBRACKET expr RBRACKET
+    (38) expr -> . expr LBRACKET error RBRACKET
+    (39) expr -> . LBRACKET clist RBRACKET
+    (40) expr -> . LBRACKET error RBRACKET
+    (41) expr -> . expr QUESTIONMARK expr COLON expr
+    (42) expr -> . expr QUESTIONMARK expr error expr
+    (43) expr -> . expr ASSIGN expr
+    (44) expr -> . expr PLUS expr
+    (45) expr -> . expr MINUS expr
+    (46) expr -> . expr TIMES expr
+    (47) expr -> . expr DIVIDE expr
+    (48) expr -> . expr MOD expr
+    (49) expr -> . expr GT expr
+    (50) expr -> . expr LT expr
+    (51) expr -> . expr EQUAL expr
+    (52) expr -> . expr GTE expr
+    (53) expr -> . expr LTE expr
+    (54) expr -> . expr NOT_EQUAL expr
+    (55) expr -> . expr OR expr
+    (56) expr -> . expr AND expr
+    (57) expr -> . NOT expr
+    (58) expr -> . PLUS expr
+    (59) expr -> . MINUS expr
+    (60) expr -> . iden
+    (61) expr -> . iden LPAREN clist RPAREN
+    (62) expr -> . iden LPAREN error RPAREN
+    (63) expr -> . num
+    (64) expr -> . str
+    (24) defvar -> . VAR type iden defvar_choice
+    (3) func -> . DEF type iden LPAREN flist RPAREN func_choice
+    (4) func -> . DEF type iden LPAREN error RPAREN func_choice
+    (65) iden -> . IDENTIFIER
+    (67) num -> . NUMBER
+    (66) str -> . STRING
 
     SEMICOLON       shift and go to state 54
+    error           shift and go to state 31
+    RBRACE          reduce using rule 68 (empty -> .)
+    IF              shift and go to state 34
+    WHILE           shift and go to state 35
+    FOR             shift and go to state 36
+    RETURN          shift and go to state 38
+    LBRACE          shift and go to state 27
+    LBRACKET        shift and go to state 40
+    NOT             shift and go to state 43
+    PLUS            shift and go to state 41
+    MINUS           shift and go to state 42
+    VAR             shift and go to state 46
+    DEF             shift and go to state 4
+    IDENTIFIER      shift and go to state 12
+    NUMBER          shift and go to state 47
+    STRING          shift and go to state 48
 
+    body                           shift and go to state 53
+    empty                          shift and go to state 29
+    stmt                           shift and go to state 30
+    expr                           shift and go to state 32
+    defvar                         shift and go to state 33
+    iden                           shift and go to state 37
+    func                           shift and go to state 39
+    num                            shift and go to state 44
+    str                            shift and go to state 45
 
 state 32
 
@@ -1350,11 +1425,9 @@ state 52
 
 state 53
 
-    (9) body -> stmt error .
-    (11) stmt -> error . SEMICOLON
+    (9) body -> error body .
 
-    RBRACE          reduce using rule 9 (body -> stmt error .)
-    SEMICOLON       shift and go to state 54
+    RBRACE          reduce using rule 9 (body -> error body .)
 
 
 state 54
@@ -4178,7 +4251,7 @@ state 121
     (67) num -> . NUMBER
     (66) str -> . STRING
 
-    error           shift and go to state 31
+    error           shift and go to state 135
     IF              shift and go to state 34
     WHILE           shift and go to state 35
     FOR             shift and go to state 36
@@ -4252,7 +4325,7 @@ state 122
     (67) num -> . NUMBER
     (66) str -> . STRING
 
-    error           shift and go to state 31
+    error           shift and go to state 135
     IF              shift and go to state 34
     WHILE           shift and go to state 35
     FOR             shift and go to state 36
@@ -4268,7 +4341,7 @@ state 122
     NUMBER          shift and go to state 47
     STRING          shift and go to state 48
 
-    stmt                           shift and go to state 135
+    stmt                           shift and go to state 136
     expr                           shift and go to state 32
     defvar                         shift and go to state 33
     iden                           shift and go to state 37
@@ -4326,7 +4399,7 @@ state 123
     (67) num -> . NUMBER
     (66) str -> . STRING
 
-    error           shift and go to state 31
+    error           shift and go to state 135
     IF              shift and go to state 34
     WHILE           shift and go to state 35
     FOR             shift and go to state 36
@@ -4343,7 +4416,7 @@ state 123
     STRING          shift and go to state 48
 
     expr                           shift and go to state 32
-    stmt                           shift and go to state 136
+    stmt                           shift and go to state 137
     defvar                         shift and go to state 33
     iden                           shift and go to state 37
     func                           shift and go to state 39
@@ -4400,7 +4473,7 @@ state 124
     (67) num -> . NUMBER
     (66) str -> . STRING
 
-    error           shift and go to state 31
+    error           shift and go to state 135
     IF              shift and go to state 34
     WHILE           shift and go to state 35
     FOR             shift and go to state 36
@@ -4416,7 +4489,7 @@ state 124
     NUMBER          shift and go to state 47
     STRING          shift and go to state 48
 
-    stmt                           shift and go to state 137
+    stmt                           shift and go to state 138
     expr                           shift and go to state 32
     defvar                         shift and go to state 33
     iden                           shift and go to state 37
@@ -4460,7 +4533,7 @@ state 125
     (67) num -> . NUMBER
     (66) str -> . STRING
 
-    error           shift and go to state 139
+    error           shift and go to state 140
     LBRACKET        shift and go to state 40
     NOT             shift and go to state 43
     PLUS            shift and go to state 41
@@ -4470,7 +4543,7 @@ state 125
     STRING          shift and go to state 48
 
     iden                           shift and go to state 37
-    expr                           shift and go to state 138
+    expr                           shift and go to state 139
     num                            shift and go to state 44
     str                            shift and go to state 45
 
@@ -4597,7 +4670,7 @@ state 131
     NUMBER          shift and go to state 47
     STRING          shift and go to state 48
 
-    expr                           shift and go to state 140
+    expr                           shift and go to state 141
     iden                           shift and go to state 37
     num                            shift and go to state 44
     str                            shift and go to state 45
@@ -4738,7 +4811,7 @@ state 134
     (68) empty -> .
 
   ! shift/reduce conflict for ELSE resolved as shift
-    ELSE            shift and go to state 143
+    ELSE            shift and go to state 144
     error           reduce using rule 68 (empty -> .)
     IF              reduce using rule 68 (empty -> .)
     WHILE           reduce using rule 68 (empty -> .)
@@ -4758,10 +4831,17 @@ state 134
 
   ! ELSE            [ reduce using rule 68 (empty -> .) ]
 
-    else_choice                    shift and go to state 141
-    empty                          shift and go to state 142
+    else_choice                    shift and go to state 142
+    empty                          shift and go to state 143
 
 state 135
+
+    (11) stmt -> error . SEMICOLON
+
+    SEMICOLON       shift and go to state 54
+
+
+state 136
 
     (14) stmt -> IF LPAREN error RPAREN stmt . else_choice
     (15) else_choice -> . empty
@@ -4769,7 +4849,7 @@ state 135
     (68) empty -> .
 
   ! shift/reduce conflict for ELSE resolved as shift
-    ELSE            shift and go to state 143
+    ELSE            shift and go to state 144
     error           reduce using rule 68 (empty -> .)
     IF              reduce using rule 68 (empty -> .)
     WHILE           reduce using rule 68 (empty -> .)
@@ -4789,10 +4869,10 @@ state 135
 
   ! ELSE            [ reduce using rule 68 (empty -> .) ]
 
-    else_choice                    shift and go to state 144
-    empty                          shift and go to state 142
+    else_choice                    shift and go to state 145
+    empty                          shift and go to state 143
 
-state 136
+state 137
 
     (17) stmt -> WHILE LPAREN expr RPAREN stmt .
 
@@ -4815,7 +4895,7 @@ state 136
     ELSE            reduce using rule 17 (stmt -> WHILE LPAREN expr RPAREN stmt .)
 
 
-state 137
+state 138
 
     (18) stmt -> WHILE LPAREN error RPAREN stmt .
 
@@ -4838,7 +4918,7 @@ state 137
     ELSE            reduce using rule 18 (stmt -> WHILE LPAREN error RPAREN stmt .)
 
 
-state 138
+state 139
 
     (19) stmt -> FOR LPAREN iden ASSIGN expr . TO expr RPAREN stmt
     (37) expr -> expr . LBRACKET expr RBRACKET
@@ -4860,7 +4940,7 @@ state 138
     (55) expr -> expr . OR expr
     (56) expr -> expr . AND expr
 
-    TO              shift and go to state 145
+    TO              shift and go to state 146
     LBRACKET        shift and go to state 56
     QUESTIONMARK    shift and go to state 57
     ASSIGN          shift and go to state 58
@@ -4879,14 +4959,14 @@ state 138
     AND             shift and go to state 71
 
 
-state 139
+state 140
 
     (20) stmt -> FOR LPAREN iden ASSIGN error . TO expr RPAREN stmt
 
-    TO              shift and go to state 146
+    TO              shift and go to state 147
 
 
-state 140
+state 141
 
     (26) defvar_choice -> ASSIGN expr .
     (37) expr -> expr . LBRACKET expr RBRACKET
@@ -4927,7 +5007,7 @@ state 140
     AND             shift and go to state 71
 
 
-state 141
+state 142
 
     (13) stmt -> IF LPAREN expr RPAREN stmt else_choice .
 
@@ -4950,7 +5030,7 @@ state 141
     ELSE            reduce using rule 13 (stmt -> IF LPAREN expr RPAREN stmt else_choice .)
 
 
-state 142
+state 143
 
     (15) else_choice -> empty .
 
@@ -4973,7 +5053,7 @@ state 142
     RBRACE          reduce using rule 15 (else_choice -> empty .)
 
 
-state 143
+state 144
 
     (16) else_choice -> ELSE . stmt
     (10) stmt -> . expr SEMICOLON
@@ -5023,7 +5103,7 @@ state 143
     (67) num -> . NUMBER
     (66) str -> . STRING
 
-    error           shift and go to state 31
+    error           shift and go to state 135
     IF              shift and go to state 34
     WHILE           shift and go to state 35
     FOR             shift and go to state 36
@@ -5039,7 +5119,7 @@ state 143
     NUMBER          shift and go to state 47
     STRING          shift and go to state 48
 
-    stmt                           shift and go to state 147
+    stmt                           shift and go to state 148
     expr                           shift and go to state 32
     defvar                         shift and go to state 33
     iden                           shift and go to state 37
@@ -5047,7 +5127,7 @@ state 143
     num                            shift and go to state 44
     str                            shift and go to state 45
 
-state 144
+state 145
 
     (14) stmt -> IF LPAREN error RPAREN stmt else_choice .
 
@@ -5070,57 +5150,9 @@ state 144
     ELSE            reduce using rule 14 (stmt -> IF LPAREN error RPAREN stmt else_choice .)
 
 
-state 145
-
-    (19) stmt -> FOR LPAREN iden ASSIGN expr TO . expr RPAREN stmt
-    (37) expr -> . expr LBRACKET expr RBRACKET
-    (38) expr -> . expr LBRACKET error RBRACKET
-    (39) expr -> . LBRACKET clist RBRACKET
-    (40) expr -> . LBRACKET error RBRACKET
-    (41) expr -> . expr QUESTIONMARK expr COLON expr
-    (42) expr -> . expr QUESTIONMARK expr error expr
-    (43) expr -> . expr ASSIGN expr
-    (44) expr -> . expr PLUS expr
-    (45) expr -> . expr MINUS expr
-    (46) expr -> . expr TIMES expr
-    (47) expr -> . expr DIVIDE expr
-    (48) expr -> . expr MOD expr
-    (49) expr -> . expr GT expr
-    (50) expr -> . expr LT expr
-    (51) expr -> . expr EQUAL expr
-    (52) expr -> . expr GTE expr
-    (53) expr -> . expr LTE expr
-    (54) expr -> . expr NOT_EQUAL expr
-    (55) expr -> . expr OR expr
-    (56) expr -> . expr AND expr
-    (57) expr -> . NOT expr
-    (58) expr -> . PLUS expr
-    (59) expr -> . MINUS expr
-    (60) expr -> . iden
-    (61) expr -> . iden LPAREN clist RPAREN
-    (62) expr -> . iden LPAREN error RPAREN
-    (63) expr -> . num
-    (64) expr -> . str
-    (65) iden -> . IDENTIFIER
-    (67) num -> . NUMBER
-    (66) str -> . STRING
-
-    LBRACKET        shift and go to state 40
-    NOT             shift and go to state 43
-    PLUS            shift and go to state 41
-    MINUS           shift and go to state 42
-    IDENTIFIER      shift and go to state 12
-    NUMBER          shift and go to state 47
-    STRING          shift and go to state 48
-
-    iden                           shift and go to state 37
-    expr                           shift and go to state 148
-    num                            shift and go to state 44
-    str                            shift and go to state 45
-
 state 146
 
-    (20) stmt -> FOR LPAREN iden ASSIGN error TO . expr RPAREN stmt
+    (19) stmt -> FOR LPAREN iden ASSIGN expr TO . expr RPAREN stmt
     (37) expr -> . expr LBRACKET expr RBRACKET
     (38) expr -> . expr LBRACKET error RBRACKET
     (39) expr -> . LBRACKET clist RBRACKET
@@ -5168,6 +5200,54 @@ state 146
 
 state 147
 
+    (20) stmt -> FOR LPAREN iden ASSIGN error TO . expr RPAREN stmt
+    (37) expr -> . expr LBRACKET expr RBRACKET
+    (38) expr -> . expr LBRACKET error RBRACKET
+    (39) expr -> . LBRACKET clist RBRACKET
+    (40) expr -> . LBRACKET error RBRACKET
+    (41) expr -> . expr QUESTIONMARK expr COLON expr
+    (42) expr -> . expr QUESTIONMARK expr error expr
+    (43) expr -> . expr ASSIGN expr
+    (44) expr -> . expr PLUS expr
+    (45) expr -> . expr MINUS expr
+    (46) expr -> . expr TIMES expr
+    (47) expr -> . expr DIVIDE expr
+    (48) expr -> . expr MOD expr
+    (49) expr -> . expr GT expr
+    (50) expr -> . expr LT expr
+    (51) expr -> . expr EQUAL expr
+    (52) expr -> . expr GTE expr
+    (53) expr -> . expr LTE expr
+    (54) expr -> . expr NOT_EQUAL expr
+    (55) expr -> . expr OR expr
+    (56) expr -> . expr AND expr
+    (57) expr -> . NOT expr
+    (58) expr -> . PLUS expr
+    (59) expr -> . MINUS expr
+    (60) expr -> . iden
+    (61) expr -> . iden LPAREN clist RPAREN
+    (62) expr -> . iden LPAREN error RPAREN
+    (63) expr -> . num
+    (64) expr -> . str
+    (65) iden -> . IDENTIFIER
+    (67) num -> . NUMBER
+    (66) str -> . STRING
+
+    LBRACKET        shift and go to state 40
+    NOT             shift and go to state 43
+    PLUS            shift and go to state 41
+    MINUS           shift and go to state 42
+    IDENTIFIER      shift and go to state 12
+    NUMBER          shift and go to state 47
+    STRING          shift and go to state 48
+
+    iden                           shift and go to state 37
+    expr                           shift and go to state 150
+    num                            shift and go to state 44
+    str                            shift and go to state 45
+
+state 148
+
     (16) else_choice -> ELSE stmt .
 
     ELSE            reduce using rule 16 (else_choice -> ELSE stmt .)
@@ -5189,50 +5269,9 @@ state 147
     RBRACE          reduce using rule 16 (else_choice -> ELSE stmt .)
 
 
-state 148
-
-    (19) stmt -> FOR LPAREN iden ASSIGN expr TO expr . RPAREN stmt
-    (37) expr -> expr . LBRACKET expr RBRACKET
-    (38) expr -> expr . LBRACKET error RBRACKET
-    (41) expr -> expr . QUESTIONMARK expr COLON expr
-    (42) expr -> expr . QUESTIONMARK expr error expr
-    (43) expr -> expr . ASSIGN expr
-    (44) expr -> expr . PLUS expr
-    (45) expr -> expr . MINUS expr
-    (46) expr -> expr . TIMES expr
-    (47) expr -> expr . DIVIDE expr
-    (48) expr -> expr . MOD expr
-    (49) expr -> expr . GT expr
-    (50) expr -> expr . LT expr
-    (51) expr -> expr . EQUAL expr
-    (52) expr -> expr . GTE expr
-    (53) expr -> expr . LTE expr
-    (54) expr -> expr . NOT_EQUAL expr
-    (55) expr -> expr . OR expr
-    (56) expr -> expr . AND expr
-
-    RPAREN          shift and go to state 150
-    LBRACKET        shift and go to state 56
-    QUESTIONMARK    shift and go to state 57
-    ASSIGN          shift and go to state 58
-    PLUS            shift and go to state 59
-    MINUS           shift and go to state 60
-    TIMES           shift and go to state 61
-    DIVIDE          shift and go to state 62
-    MOD             shift and go to state 63
-    GT              shift and go to state 64
-    LT              shift and go to state 65
-    EQUAL           shift and go to state 66
-    GTE             shift and go to state 67
-    LTE             shift and go to state 68
-    NOT_EQUAL       shift and go to state 69
-    OR              shift and go to state 70
-    AND             shift and go to state 71
-
-
 state 149
 
-    (20) stmt -> FOR LPAREN iden ASSIGN error TO expr . RPAREN stmt
+    (19) stmt -> FOR LPAREN iden ASSIGN expr TO expr . RPAREN stmt
     (37) expr -> expr . LBRACKET expr RBRACKET
     (38) expr -> expr . LBRACKET error RBRACKET
     (41) expr -> expr . QUESTIONMARK expr COLON expr
@@ -5272,6 +5311,47 @@ state 149
 
 
 state 150
+
+    (20) stmt -> FOR LPAREN iden ASSIGN error TO expr . RPAREN stmt
+    (37) expr -> expr . LBRACKET expr RBRACKET
+    (38) expr -> expr . LBRACKET error RBRACKET
+    (41) expr -> expr . QUESTIONMARK expr COLON expr
+    (42) expr -> expr . QUESTIONMARK expr error expr
+    (43) expr -> expr . ASSIGN expr
+    (44) expr -> expr . PLUS expr
+    (45) expr -> expr . MINUS expr
+    (46) expr -> expr . TIMES expr
+    (47) expr -> expr . DIVIDE expr
+    (48) expr -> expr . MOD expr
+    (49) expr -> expr . GT expr
+    (50) expr -> expr . LT expr
+    (51) expr -> expr . EQUAL expr
+    (52) expr -> expr . GTE expr
+    (53) expr -> expr . LTE expr
+    (54) expr -> expr . NOT_EQUAL expr
+    (55) expr -> expr . OR expr
+    (56) expr -> expr . AND expr
+
+    RPAREN          shift and go to state 152
+    LBRACKET        shift and go to state 56
+    QUESTIONMARK    shift and go to state 57
+    ASSIGN          shift and go to state 58
+    PLUS            shift and go to state 59
+    MINUS           shift and go to state 60
+    TIMES           shift and go to state 61
+    DIVIDE          shift and go to state 62
+    MOD             shift and go to state 63
+    GT              shift and go to state 64
+    LT              shift and go to state 65
+    EQUAL           shift and go to state 66
+    GTE             shift and go to state 67
+    LTE             shift and go to state 68
+    NOT_EQUAL       shift and go to state 69
+    OR              shift and go to state 70
+    AND             shift and go to state 71
+
+
+state 151
 
     (19) stmt -> FOR LPAREN iden ASSIGN expr TO expr RPAREN . stmt
     (10) stmt -> . expr SEMICOLON
@@ -5321,7 +5401,7 @@ state 150
     (67) num -> . NUMBER
     (66) str -> . STRING
 
-    error           shift and go to state 31
+    error           shift and go to state 135
     IF              shift and go to state 34
     WHILE           shift and go to state 35
     FOR             shift and go to state 36
@@ -5339,13 +5419,13 @@ state 150
 
     iden                           shift and go to state 37
     expr                           shift and go to state 32
-    stmt                           shift and go to state 152
+    stmt                           shift and go to state 153
     defvar                         shift and go to state 33
     func                           shift and go to state 39
     num                            shift and go to state 44
     str                            shift and go to state 45
 
-state 151
+state 152
 
     (20) stmt -> FOR LPAREN iden ASSIGN error TO expr RPAREN . stmt
     (10) stmt -> . expr SEMICOLON
@@ -5395,7 +5475,7 @@ state 151
     (67) num -> . NUMBER
     (66) str -> . STRING
 
-    error           shift and go to state 31
+    error           shift and go to state 135
     IF              shift and go to state 34
     WHILE           shift and go to state 35
     FOR             shift and go to state 36
@@ -5413,13 +5493,13 @@ state 151
 
     iden                           shift and go to state 37
     expr                           shift and go to state 32
-    stmt                           shift and go to state 153
+    stmt                           shift and go to state 154
     defvar                         shift and go to state 33
     func                           shift and go to state 39
     num                            shift and go to state 44
     str                            shift and go to state 45
 
-state 152
+state 153
 
     (19) stmt -> FOR LPAREN iden ASSIGN expr TO expr RPAREN stmt .
 
@@ -5442,7 +5522,7 @@ state 152
     ELSE            reduce using rule 19 (stmt -> FOR LPAREN iden ASSIGN expr TO expr RPAREN stmt .)
 
 
-state 153
+state 154
 
     (20) stmt -> FOR LPAREN iden ASSIGN error TO expr RPAREN stmt .
 
@@ -5468,4 +5548,4 @@ WARNING:
 WARNING: Conflicts:
 WARNING: 
 WARNING: shift/reduce conflict for ELSE in state 134 resolved as shift
-WARNING: shift/reduce conflict for ELSE in state 135 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 136 resolved as shift

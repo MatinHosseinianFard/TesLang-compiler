@@ -41,7 +41,7 @@ class Grammar(object):
     '''Note: error token usually does not appear as 
         the last token on the right in an error rule'''
     def p_body2_error(self, p):
-        '''body : stmt error'''
+        '''body : error body'''
         self.parser_messages.add_message({"message": "There must be an statement before ; or }","lineno": self.lines_we_corrected.pop(), "is_warning":True})
         Colorprints.print_in_cyan("message: There must be an statement before ; or }" + f", lineno: {self.lexer.lineno}")
 
