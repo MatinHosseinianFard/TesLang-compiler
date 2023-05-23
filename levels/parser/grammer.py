@@ -100,6 +100,12 @@ class Grammar(object):
     def p_defvar(self, p):
         '''defvar : VAR type iden defvar_choice'''
 
+    def p_defvar_error(self, p):
+        '''defvar : VAR error iden defvar_choice'''
+        self.parser_messages.add_message({"message": "Type must be one of int, vector, string","lineno": self.lines_we_corrected.pop(), "is_warning":True})
+        Colorprints.print_in_cyan(f"message: Type must be one of int, vector, string, lineno: {self.lexer.lineno}")
+
+
     def p_defvar_choice1(self, p):
         '''defvar_choice : empty'''
 

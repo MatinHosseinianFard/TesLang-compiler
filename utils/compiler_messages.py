@@ -18,6 +18,7 @@ class CompilerMessages(object):
         for i, msg in enumerate(self.messages):
             # Colorprints.print_in_black(f"{config.code_file_path}:", end="")
             
+            
             if "is_warning" in msg:
                 Colorprints.print_in_yellow(f"=> {msg['message']}")
             else:

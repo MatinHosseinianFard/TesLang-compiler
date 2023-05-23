@@ -1,10 +1,23 @@
 def int find(int 234 A) {
     for (i = 0 23 to length(A)) {
         if (n === k) {
-            return j;
+            ret12urn j;
         }
+        213
         j = 1j + 1;
     }
     return j;
     hkj
+}
+
+def int sum(vector A, int n) {
+var int k;
+var float j;
+for (i = 0 to length(A)) {
+if (n === k) {
+return j;
+}
+j = j + z 1;
+}return -1;
+sda
 }
