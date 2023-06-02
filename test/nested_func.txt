@@ -1,0 +1,19 @@
+def int find(vector A, int n) {
+    def int find(int B, int z) {
+    var int k;
+    for (i = 0 to length(B)) {
+        if (n == k) {
+        return i;
+        }
+    }
+    return -1;
+}
+    
+    var int k;
+    for (i = 0 to length(A)) {
+        if (n == k) {
+        return i;
+        }
+    }
+    return -1;
+}

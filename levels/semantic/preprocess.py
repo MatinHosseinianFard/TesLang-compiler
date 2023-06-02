@@ -1,6 +1,7 @@
 from utils.symbol_table import *
 import utils.AST as AST
 from utils.node_visitor import NodeVisitor
+from ply.lex import LexToken
 import config
 
 
@@ -24,7 +25,7 @@ class PreProcess(NodeVisitor):
         #print(f"visiting: func")
 
         parameters = self.get_parameters(node)
-        print(node.iden)
+        # print(node.iden)
         function_name= node.iden.iden_value
 
 
@@ -77,12 +78,12 @@ class PreProcess(NodeVisitor):
         self.visit(node.else_choice, table)
 
 
-    def visit_Else_choice1(self, node, table):
-        #print(f"visiting: stmt4")
-        pass
+    # def visit_ElseChoice1(self, node, table):
+    #     #print(f"visiting: stmt4")
+    #     pass
 
 
-    def visit_Else_choice2(self, node, table):
+    def visit_ElseChoice2(self, node, table):
         #print(f"visiting: stmt4")
         else_block_symbol_table = SymbolTable(table, f"else_block_{node.lineno}") # symbol table for "else" block
         self.visit(node.stmt, else_block_symbol_table)
@@ -113,12 +114,27 @@ class PreProcess(NodeVisitor):
         body_block_symbol_table = SymbolTable(table, f"body_block_{node.lineno}") # symbol table for "body" block
         self.visit(node.body, body_block_symbol_table)
 
+
+    def visit_Stmt7(self, node, table):
+        #print(f"visiting: stmt7")
+        body_block_symbol_table = SymbolTable(table, f"body_block_{node.lineno}") # symbol table for "body" block
+        self.visit(node.body, body_block_symbol_table)
+
+    
+    def visit_Stmt8(self, node, table):
+        #print(f"visiting: stmt7")
+        self.visit(node.func, table)
+
     
     def visit_Defvar(self, node, table):
         # name = node.iden.iden_value["name"]
         # type = node.type.type_value["name"]
         # iden = VariableSymbol(name, type)
         # table.put(iden)
+        pass
+
+    
+    def visit_DefvarChoice2(self, node, table):
         pass
             
     def visit_Type(self, node, table):
@@ -165,6 +181,8 @@ class PreProcess(NodeVisitor):
     def get_parameters(self, node):
         parameters = []
         flist = node.flist
+        if isinstance(flist, LexToken):
+            return parameters
         # print(flist)
         if not isinstance(flist, AST.Empty):
             if flist.iden:

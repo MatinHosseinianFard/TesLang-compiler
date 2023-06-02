@@ -5,6 +5,7 @@ from levels.lexer.lexer import Lexer
 from levels.parser.grammer import Grammar
 from levels.parser.parser import Parser
 from levels.semantic.preprocess import PreProcess
+from levels.semantic.type_checker import TypeChecker
 import config
 from utils.color_prints import Colorprints
 
@@ -24,7 +25,7 @@ class Compiler(object):
         self.parser = Parser(self.grammar)        
 
         config.global_symbol_table = SymbolTable(None, "global")
-        # self.type_checker = TypeChecker(self.semantic_messages)
+        self.type_checker = TypeChecker(self.semantic_messages)
         self.preprocess = PreProcess(self.semantic_messages)
         self.compiled_failed = False
 
@@ -32,10 +33,10 @@ class Compiler(object):
         # self.lexer.build(data)
 
         self.parser.build(data)
-        print(self.lines_we_corrected)
+        # print(self.lines_we_corrected)
         if print_messages:
             if self.lexer_messages.errors == 0:
-                Colorprints.print_in_green(f"***Congrats! No lexer errors!***")
+                Colorprints.print_in_green(f"***No lexer errors!***")
                 self.lexer_messages.print_messages()
 
             elif self.lexer_messages.errors != 0:
@@ -44,7 +45,7 @@ class Compiler(object):
             
             #parser errors
             if self.parser_messages.errors == 0:
-                Colorprints.print_in_green(f"***Congrats! No parser errors!***")
+                Colorprints.print_in_green(f"***No parser errors!***")
                 self.parser_messages.print_messages()
 
             elif self.parser_messages.errors != 0:
@@ -54,23 +55,23 @@ class Compiler(object):
         
         #semantic
         self.preprocess.visit(config.ast, None)
-        print(config.global_symbol_table)
-        # self.type_checker.visit(config.ast, None)
+        # print(config.global_symbol_table)
+        self.type_checker.visit(config.ast, None)
         #semantic errors
         if print_messages:
             if self.semantic_messages.errors == 0 and not self.compiled_failed:
                 Colorprints.print_in_green(f"***Congrats! No semantic errors!***")
-                self.semantic_messages.print_messages()
+                self.semantic_messages.print_messages(one_line=False)
 
             elif self.semantic_messages.errors != 0 and not self.compiled_failed:
                 Colorprints.print_in_yellow(f"***{self.semantic_messages.errors} semantic errors detected***")
-                self.semantic_messages.print_messages()
+                self.semantic_messages.print_messages(one_line=False)
 
 
 
 if __name__ == '__main__':
-    # with open("./test/parser.txt") as f:
-    with open("./test/semantic.txt") as f:
+    with open("./test/parser.txt") as f:
+    # with open("./test/nested_func.txt") as f:
         data = f.read()
         f.close()
     compiler = Compiler()

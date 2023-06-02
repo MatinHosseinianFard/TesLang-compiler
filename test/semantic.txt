@@ -1,20 +1,26 @@
-def int find(int A, int B) {
+def int find(vector A, int n) {
+    var int k;
+    var float j;
     for (i = 0 to length(A)) {
         if (n == k) {
-            return j;
+        return j;
         }
         j = j + 1;
     }
-    return j;
+    return -1;
 }
+def int main() {
+    var int A;
+    var int a;
+    
+    A = list(3);
 
-def int sum(vector A, int n) {
-var int k;
-var int j;
-for (i = 0 to length(A)) {
-if (n == k) {
-return j;
-}
-j = j + z;
-}return -1;
+    A[0] = 1;
+    A[1] = 2;
+    A[2] = 3;
+    print(find(A, a));
+    print(find(A));
+    print(find(a, A));
+    
+    return A;
 }

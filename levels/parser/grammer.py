@@ -53,8 +53,6 @@ class Grammar(object):
 
         self.parser_messages.add_message(
             {"message": "Suitable parameters wasn't defined", "lineno": self.lines_we_corrected.pop(), "is_warning": True})
-        Colorprints.print_in_cyan(
-            f"message: Suitable parameters wasn't defined, lineno: {self.lexer.lineno}")
 
     def p_func_choice1(self, p):
         '''func_choice : LBRACE body RBRACE'''
@@ -104,10 +102,10 @@ class Grammar(object):
             "ast": Body2(p[1], p[2]["ast"], self.lexer.lineno)
         }
 
-        self.parser_messages.add_message({"message": "There must be an statement before ; or }",
+        self.parser_messages.add_message({"message": "There must be an statement",
                                          "lineno": self.lines_we_corrected.pop(), "is_warning": True})
-        Colorprints.print_in_cyan(
-            "message: There must be an statement before ; or }" + f", lineno: {self.lexer.lineno}")
+        # self.parser_messages.add_message({"message": "",
+        #                                  "lineno": self.lines_we_corrected.pop(), "is_warning": True})
 
     def p_stmt1(self, p):
         '''stmt : expr SEMICOLON'''
@@ -129,8 +127,6 @@ class Grammar(object):
 
         self.parser_messages.add_message(
             {"message": "There must be an expression before ;", "lineno": self.lines_we_corrected.pop(), "is_warning": True})
-        Colorprints.print_in_cyan(
-            f"message: There must be an expression before ;, lineno: {self.lexer.lineno}")
 
     def p_stmt2(self, p):
         '''stmt : defvar SEMICOLON'''
@@ -161,8 +157,6 @@ class Grammar(object):
 
         self.parser_messages.add_message({"message": "There must be an expression inside the paranthesis",
                                          "lineno": self.lines_we_corrected.pop(), "is_warning": True})
-        Colorprints.print_in_cyan(
-            f"message: There must be an expression inside the paranthesis, lineno: {self.lexer.lineno}")
 
     def p_else_choice1(self, p):
         '''else_choice : empty'''
@@ -202,8 +196,6 @@ class Grammar(object):
 
         self.parser_messages.add_message(
             {"message": "There must be an expression inside the paranthesis", "lineno": self.lexer.lineno, "is_warning": True})
-        Colorprints.print_in_cyan(
-            f"message: There must be an expression inside the paranthesis, lineno: {self.lexer.lineno}")
 
     def p_stmt5(self, p):
         '''stmt : FOR LPAREN iden ASSIGN expr TO expr RPAREN stmt'''
@@ -225,8 +217,6 @@ class Grammar(object):
 
         self.parser_messages.add_message({"message": "There must be an expression inside the paranthesis",
                                          "lineno": self.lines_we_corrected.pop(), "is_warning": True})
-        Colorprints.print_in_cyan(
-            f"message: There must be an expression inside the paranthesis, lineno: {self.lexer.lineno}")
 
     def p_stmt5_error2(self, p):
         '''stmt : FOR LPAREN iden ASSIGN expr TO error RPAREN stmt'''
@@ -239,8 +229,6 @@ class Grammar(object):
 
         self.parser_messages.add_message({"message": "There must be an expression inside the paranthesis",
                                          "lineno": self.lines_we_corrected.pop(), "is_warning": True})
-        Colorprints.print_in_cyan(
-            f"message: There must be an expression inside the paranthesis, lineno: {self.lexer.lineno}")
 
     def p_stmt6(self, p):
         '''stmt : RETURN expr SEMICOLON'''
@@ -289,8 +277,6 @@ class Grammar(object):
 
         self.parser_messages.add_message(
             {"message": "Type must be one of int, vector, string", "lineno": self.lines_we_corrected.pop(), "is_warning": True})
-        Colorprints.print_in_cyan(
-            f"message: Type must be one of int, vector, string, lineno: {self.lexer.lineno}")
 
     def p_defvar_choice1(self, p):
         '''defvar_choice : empty'''
@@ -384,8 +370,6 @@ class Grammar(object):
 
         self.parser_messages.add_message(
             {"message": "There must be an expression inside the bracket", "lineno": self.lexer.lineno, "is_warning": True})
-        Colorprints.print_in_cyan(
-            f"message: There must be an expression inside the paranthesis, lineno: {self.lexer.lineno}")
 
     def p_expr2(self, p):
         '''expr : LBRACKET clist RBRACKET'''
@@ -407,8 +391,6 @@ class Grammar(object):
 
         self.parser_messages.add_message(
             {"message": "Error Inside the paranthesis,you should put the arguments inside it", "lineno": self.lexer.lineno, "is_warning": True})
-        Colorprints.print_in_cyan(
-            f"message: Error Inside the paranthesis,you should put the arguments inside it, lineno: {self.lexer.lineno}")
 
     def p_expr3(self, p):
         '''expr : expr QUESTIONMARK expr COLON expr'''
@@ -430,8 +412,6 @@ class Grammar(object):
 
         self.parser_messages.add_message(
             {"message": "The syntax is 'expr ? expr : expr'", "lineno": self.lexer.lineno, "is_warning": True})
-        Colorprints.print_in_cyan(
-            f"message: The syntax is 'expr ? expr : expr', lineno: {self.lexer.lineno}")
 
     def p_expr4(self, p):
         '''expr : expr ASSIGN expr
@@ -457,8 +437,6 @@ class Grammar(object):
     # def p_expr4_error(self, p):
     #     '''expr : error ASSIGN expr'''
     #     self.parser_messages.add_message({"message": "There must be an expression inside the bracket","lineno": self.lexer.lineno, "is_warning":True})
-    #     Colorprints.print_in_cyan(f"message: There must be an expression inside the paranthesis, lineno: {self.lexer.lineno}")
-
     def p_expr5(self, p):
         '''expr : NOT expr
                 | PLUS expr
@@ -499,8 +477,6 @@ class Grammar(object):
 
         self.parser_messages.add_message(
             {"message": "Error Inside the paranthesis,you should put the arguments inside it", "lineno": self.lexer.lineno, "is_warning": True})
-        Colorprints.print_in_cyan(
-            f"message: Error Inside the paranthesis,you should put the arguments inside it, lineno: {self.lexer.lineno}")
 
     def p_expr8(self, p):
         '''expr : num'''
@@ -565,10 +541,8 @@ class Grammar(object):
     def p_error(self, p):
         if p:
             self.lines_we_corrected.append(self.lexer.lineno)
-            Colorprints.print_in_cyan(
-                f"Syntax error at token: {p.value}, lineno: {self.lexer.lineno}")
             self.parser_messages.add_message(
-                {"message": f"Syntax error at token: {p.value}", "lineno": self.lexer.lineno})
+                {"message": f"Syntax error at token: '{p.value}'", "lineno": self.lexer.lineno})
             # Just discard the token and tell the parser it's okay.
             # parser.errok()
         else:

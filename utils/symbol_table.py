@@ -7,7 +7,8 @@ class Symbol:
         return f"Symbol(name='{self.name}', type='{self.type}')"
 
 class VariableSymbol(Symbol):
-    pass
+    def __init__(self, name, type):
+        super().__init__(name, type)
 
 class VectorSymbol(Symbol):
     def __init__(self, name, type, size):

@@ -1,4 +1,5 @@
 def int find(int 234 A, int B) {
+    243
     for (i = 0 23 to length(A)) {
         if (n === k) {
             ret12urn j;
@@ -9,7 +10,7 @@ def int find(int 234 A, int B) {
     return j;
     hkj
 }
-
+----
 def int sum(vector A, int n) {
 var int k;
 var float j;

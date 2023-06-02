@@ -1,4 +1,4 @@
-from os import error
+from ply.lex import LexToken
 from utils.symbol_table import *
 import utils.AST as AST
 
@@ -16,7 +16,9 @@ class NodeVisitor(object):
         return visitor(node, table)
 
 
-    def generic_visit(self, node, table):        # Called if no explicit visitor function exists for a node.
+    def generic_visit(self, node, table):
+        if isinstance(node, LexToken):
+            return        # Called if no explicit visitor function exists for a node.
         node = node["ast"]
         if isinstance(node, list):
             for elem in node:
