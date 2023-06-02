@@ -1,0 +1,20 @@
+def int find(int A, int B) {
+    for (i = 0 to length(A)) {
+        if (n == k) {
+            return j;
+        }
+        j = j + 1;
+    }
+    return j;
+}
+
+def int sum(vector A, int n) {
+var int k;
+var int j;
+for (i = 0 to length(A)) {
+if (n == k) {
+return j;
+}
+j = j + z;
+}return -1;
+}

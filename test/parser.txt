@@ -1,4 +1,4 @@
-def int find(int 234 A) {
+def int find(int 234 A, int B) {
     for (i = 0 23 to length(A)) {
         if (n === k) {
             ret12urn j;
@@ -15,7 +15,7 @@ var int k;
 var float j;
 for (i = 0 to length(A)) {
 if (n === k) {
-return j;
+return j;]
 }
 j = j + z 1;
 }return -1;
