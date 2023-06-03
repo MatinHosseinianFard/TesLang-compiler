@@ -41,9 +41,15 @@ class CompilerMessages(object):
                 k = 0
                 for cline in common_line:
                     if k % 2 == 0:
-                        self.messages[cline] = error_lines_messages.pop(0)
+                        if len(error_lines_messages) != 0:
+                            self.messages[cline] = error_lines_messages.pop(0)
+                        elif len(warning_lines_messages) != 0:
+                            self.messages[cline] = warning_lines_messages.pop()
                     else:
-                        self.messages[cline] = warning_lines_messages.pop()
+                        if len(warning_lines_messages) != 0:
+                            self.messages[cline] = warning_lines_messages.pop()
+                        elif len(error_lines_messages) != 0:
+                            self.messages[cline] = error_lines_messages.pop(0)
                     k += 1
         
 

@@ -1,11 +1,27 @@
-def int main() {
-    var int A;
-    A = [1, 2, 3, 4]
-    #A = list(3);
+def vector<string> main() {
+    
+    def vector<int> find(vector<string> b) {
+        return j;
+    }
+    var vector<int> A;
+    A = [1, 2, 3, 4];
+#   A = list(3); 
 
+    
+    
+    var int k;
+    var vector<string> z;
+    k = find(z);
     A[0] = 1;
     A[1] = 2;
     A[2] = 3;
+    
+    #var int i;
+    
+    for (i = 0 to list(3)) {
+        
+        #print(1);
+    }
 
     return A;
 }

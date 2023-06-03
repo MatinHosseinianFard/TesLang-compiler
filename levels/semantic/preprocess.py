@@ -1,5 +1,5 @@
 from utils.symbol_table import *
-import utils.AST as AST
+import utils.ast as ast
 from utils.node_visitor import NodeVisitor
 from ply.lex import LexToken
 import config
@@ -26,23 +26,40 @@ class PreProcess(NodeVisitor):
 
         parameters = self.get_parameters(node)
         # print(node.iden)
-        function_name= node.iden.iden_value
+        function_name = node.iden.iden_value
 
-
+        # print(function_name)
         name = node.iden.iden_value
-
-        function_symbol = FunctionSymbol(name, node.type.type_value, parameters)
+        if node.type.type_value != "vector":
+            function_symbol = FunctionSymbol(name, node.type.type_value, parameters)
+        else:
+            if isinstance(node.vector_type_choice, ast.Empty) or node.vector_type_choice.type.type_value not in ["int", "string"]:
+                self.semantic_messages.add_message({"message": "The function return type definition must be one of these: null, int, string, vector<int>, vector<string>", "lineno":node.vector_type_choice.lineno})
+                function_symbol = FunctionSymbol(name, "null", parameters)
+            else:
+                function_symbol = FunctionSymbol(name, node.type.type_value + " " + node.vector_type_choice.type.type_value, parameters)
         if not table.put(function_symbol):
             # if there is a function or var with the same identifier
             self.semantic_messages.add_message({"message":f"Identifier '{name}' already exists", "lineno":node.flist.lineno})
             return
+        
         function_body_table = SymbolTable(table, function_name+"_function_body_block_table")
+        
         for par in parameters:
-            name = par["iden"].iden_value
-            type = par["type"].type_value
-            #print(f"funcion {function_name}'s arg: name: '{name}', type: {type}'" )
-            if not function_body_table.put(VariableSymbol(name, type)):
-                self.semantic_messages.add_message({"message": f"'{name}' already defined", "lineno": node.flist.lineno})
+            if "vector_item_type" not in par:
+                name = par["iden"].iden_value
+                type = par["type"].type_value
+                #print(f"funcion {function_name}'s arg: name: '{name}', type: {type}'" )
+                if not function_body_table.put(VariableSymbol(name, type)):
+                    self.semantic_messages.add_message({"message": f"'{name}' already defined", "lineno": node.flist.lineno})
+            else:
+                name = par["iden"].iden_value
+                vector_type = par["vector_item_type"].type_value
+                #print(f"funcion {function_name}'s arg: name: '{name}', type: {type}'" )
+                if not function_body_table.put(VectorSymbol(name, vector_type)):
+                    self.semantic_messages.add_message({"message": f"'{name}' already defined", "lineno": node.flist.lineno})
+            
+
         self.visit(node.func_choice, function_body_table)
         
     def visit_FuncChoice1(self, node, table):
@@ -134,6 +151,10 @@ class PreProcess(NodeVisitor):
         pass
 
     
+    def VectorTypeChoice2(self, node, table):
+        pass
+
+
     def visit_DefvarChoice2(self, node, table):
         pass
             
@@ -141,13 +162,18 @@ class PreProcess(NodeVisitor):
         #print(f"visiting: type")
         pass
     
-    def visit_Str(self, node, table):
-        #print(f"visiting: str")
-        pass
-
     def visit_Iden(self, node, table):
         #print(f"visiting: iden")
         pass
+    
+    def visit_Str(self, node, table):
+        #print(f"visiting: str")
+        pass
+    
+    def visit_Num(self, node, table):
+        #print(f"visiting: str")
+        pass
+
 
     def visit_Empty(self, node, table):
         #print(f"visiting: empty")
@@ -162,14 +188,14 @@ class PreProcess(NodeVisitor):
         print_funcition_symbol = FunctionSymbol("print", "int", [{"iden": "n", "type": "int"}] )
         table.put(print_funcition_symbol)
 
-        lsit_funcition_symbol = FunctionSymbol("list", "vector", [{"iden": "x", "type": "int"}] )
+        lsit_funcition_symbol = FunctionSymbol("list", "vector int", [{"iden": "x", "type": "int"}] )
         table.put(lsit_funcition_symbol)
 
-        getList_funcition_symbol = FunctionSymbol("getList", "vector", [{"iden": "A", "type": "vector"}] )
-        table.put(getList_funcition_symbol)
+        # getList_funcition_symbol = FunctionSymbol("getList", "vector int", [{"iden": "A", "type": "vector int"}] )
+        # table.put(getList_funcition_symbol)
 
-        printList_funcition_symbol = FunctionSymbol("printList", "vector", [{"iden": "A", "type": "vector"}] )
-        table.put(printList_funcition_symbol)
+        # printList_funcition_symbol = FunctionSymbol("printList", "vector int", [{"iden": "A", "type": "vector int"}] )
+        # table.put(printList_funcition_symbol)
 
         length_funcition_symbol = FunctionSymbol("length", "int", [{"iden": "A", "type": "vector"}] )
         table.put(length_funcition_symbol)
@@ -184,12 +210,19 @@ class PreProcess(NodeVisitor):
         if isinstance(flist, LexToken):
             return parameters
         # print(flist)
-        if not isinstance(flist, AST.Empty):
+        if not isinstance(flist, ast.Empty):
             if flist.iden:
-                parameters.append({"iden": flist.iden, "type": flist.type})
+                if isinstance(flist.vector_type_choice, ast.Empty):
+                    parameters.append({"iden": flist.iden, "type": flist.type})
+                else:
+                    parameters.append({"iden": flist.iden, "type": flist.type, "vector_item_type": flist.vector_type_choice.type})
             while hasattr(flist, "flist"):
                 flist = flist.flist
-                if (not isinstance(flist, AST.Empty)):
-                    parameters.append({"iden": flist.iden, "type": flist.type})
+                if (not isinstance(flist, ast.Empty)):
+                    if isinstance(flist.vector_type_choice, ast.Empty):
+                        parameters.append({"iden": flist.iden, "type": flist.type})
+                    else:
+                        parameters.append({"iden": flist.iden, "type": flist.type, "vector_item_type": flist.vector_type_choice.type})
+
         parameters.reverse()
         return parameters

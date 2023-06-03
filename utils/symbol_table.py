@@ -1,3 +1,4 @@
+from sys import maxsize
 class Symbol:
     def __init__(self, name, type):
         self.name = name
@@ -10,8 +11,8 @@ class VariableSymbol(Symbol):
     def __init__(self, name, type):
         super().__init__(name, type)
 
-class VectorSymbol(Symbol):
-    def __init__(self, name, type, size):
+class VectorSymbol(VariableSymbol):
+    def __init__(self, name, type, size=maxsize):
         super().__init__(name, type)
         self.size = size
 
@@ -43,7 +44,7 @@ class SymbolTable:
             self.symbols[symbol.name] = symbol
             return True
 
-    def get(self, name, check_parent=True):
+    def get(self, name, check_parent=True, ckeck_children=False):
         if name in self.symbols:
             return self.symbols[name]
         elif check_parent and self.parent:

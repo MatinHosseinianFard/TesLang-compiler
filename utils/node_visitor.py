@@ -1,6 +1,6 @@
 from ply.lex import LexToken
 from utils.symbol_table import *
-import utils.AST as AST
+import utils.ast as ast
 
 class NodeVisitor(object):
     
@@ -27,7 +27,7 @@ class NodeVisitor(object):
             for child in node.children:
                 if isinstance(child, list):
                     for item in child:
-                        if isinstance(item, AST.Node):
+                        if isinstance(item, ast.Node):
                             self.visit(item)
-                elif isinstance(child, AST.Node):
+                elif isinstance(child, ast.Node):
                     self.visit(child)

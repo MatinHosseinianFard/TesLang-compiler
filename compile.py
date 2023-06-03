@@ -42,6 +42,7 @@ class Compiler(object):
             elif self.lexer_messages.errors != 0:
                 Colorprints.print_in_yellow(f"***{self.lexer_messages.errors} lexer errors detected***")
                 self.lexer_messages.print_messages()
+                self.compiled_failed = True
             
             #parser errors
             if self.parser_messages.errors == 0:
@@ -51,6 +52,7 @@ class Compiler(object):
             elif self.parser_messages.errors != 0:
                 Colorprints.print_in_yellow(f"***{self.parser_messages.errors} parser errors detected***")
                 self.parser_messages.print_messages()
+                self.compiled_failed = True
         
         
         #semantic
@@ -63,14 +65,14 @@ class Compiler(object):
                 Colorprints.print_in_green(f"***Congrats! No semantic errors!***")
                 self.semantic_messages.print_messages(one_line=False)
 
-            elif self.semantic_messages.errors != 0 and not self.compiled_failed:
+            elif self.semantic_messages.errors != 0:
                 Colorprints.print_in_yellow(f"***{self.semantic_messages.errors} semantic errors detected***")
                 self.semantic_messages.print_messages(one_line=False)
 
 
 
 if __name__ == '__main__':
-    with open("./test/parser.txt") as f:
+    with open("./test/semantic.txt") as f:
     # with open("./test/nested_func.txt") as f:
         data = f.read()
         f.close()
