@@ -32,17 +32,16 @@ class Prog2(Node):
 
 
 class Func(Node):
-    def __init__(self, type, vector_type_choice, iden, flist, func_choice, lineno):
+    def __init__(self, type, iden, flist, func_choice, lineno):
         self.lineno = lineno
         self.type = type
-        self.vector_type_choice = vector_type_choice
         self.iden = iden
         self.flist = flist
         self.func_choice = func_choice
-        self.children = (type, vector_type_choice, iden, flist, func_choice)
+        self.children = (type, iden, flist, func_choice)
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(type={self.type.__repr__()}, (vector_type_choice={self.vector_type_choice.__repr__()},  iden={self.iden.__repr__()}, flist={self.flist.__repr__()}, " \
+        return f"{self.__class__.__name__}(type={self.type.__repr__()},  iden={self.iden.__repr__()}, flist={self.flist.__repr__()}, " \
                f"func_choice={self.func_choice.__repr__()}, lineno={self.lineno})"
 
 
@@ -175,27 +174,16 @@ class Stmt8(Node):
 
 
 class Defvar(Node):
-    def __init__(self, type, vector_type_choice, iden, defvar_choice, lineno):
+    def __init__(self, type, iden, defvar_choice, lineno):
         self.lineno = lineno
         self.type = type
         self.iden = iden
-        self.vector_type_choice = vector_type_choice
         self.defvar_choice = defvar_choice
-        self.children = (type, vector_type_choice, iden, defvar_choice)
+        self.children = (type, iden, defvar_choice)
 
     def __repr__(self):
         return f"{self.__class__.__name__}(type={self.type.__repr__()}, iden={self.iden.__repr__()}, " \
-               f"vector_type_choice={self.vector_type_choice.__repr__()}, defvar_choice={self.defvar_choice.__repr__()}, lineno={self.lineno})"
-
-
-class VectorTypeChoice2(Node):
-    def __init__(self, type, lineno):
-        self.lineno = lineno
-        self.type = type
-        self.children = (type,)
-
-    def __repr__(self):
-        return f"{self.__class__.__name__}(type={self.type.__repr__()}, lineno={self.lineno})"
+               f"defvar_choice={self.defvar_choice.__repr__()}, lineno={self.lineno})"
 
 
 class DefvarChoice2(Node):
@@ -209,28 +197,26 @@ class DefvarChoice2(Node):
 
 
 class Flist2(Node):
-    def __init__(self, type, vector_type_choice, iden, lineno):
+    def __init__(self, type, iden, lineno):
         self.lineno = lineno
         self.type = type
-        self.vector_type_choice = vector_type_choice
         self.iden = iden
-        self.children = (type, vector_type_choice, iden)
+        self.children = (type, iden)
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(type={self.type.__repr__()}, (vector_type_choice={self.vector_type_choice.__repr__()}, iden={self.iden.__repr__()}, lineno={self.lineno})"
+        return f"{self.__class__.__name__}(type={self.type.__repr__()}, iden={self.iden.__repr__()}, lineno={self.lineno})"
 
 
 class Flist3(Node):
-    def __init__(self, type, vector_type_choice, iden, flist, lineno):
+    def __init__(self, type, iden, flist, lineno):
         self.lineno = lineno
         self.type = type
-        self.vector_type_choice = vector_type_choice
         self.iden = iden
         self.flist = flist
-        self.children = (type, vector_type_choice, iden, flist)
+        self.children = (type, iden, flist)
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(type={self.type.__repr__()}, (vector_type_choice={self.vector_type_choice.__repr__()}, iden={self.iden.__repr__()}, flist={self.flist.__repr__()}, " \
+        return f"{self.__class__.__name__}(type={self.type.__repr__()}, iden={self.iden.__repr__()}, flist={self.flist.__repr__()}, " \
                f"lineno={self.lineno})"
 
 
@@ -354,13 +340,15 @@ class Expr9(Node):
 
 
 class Type(Node):
-    def __init__(self, type_value, lineno):
+    def __init__(self, type_value, vector_type_value, lineno):
         self.lineno = lineno
         self.type_value = type_value
-        self.children = (type_value,)
+        self.vector_type_value = vector_type_value
+        self.children = (type_value, vector_type_value)
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(type_value={self.type_value.__repr__()}, lineno={self.lineno})"
+        return f"{self.__class__.__name__}(type_value={self.type_value.__repr__()}, vector_type_value={self.vector_type_value.__repr__()}, lineno={self.lineno})"
+
 
 
 class Iden(Node):

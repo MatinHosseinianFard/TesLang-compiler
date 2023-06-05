@@ -15,7 +15,7 @@ class Grammar(object):
     def p_prog1(self, p):
         '''prog : empty'''
         p[0] = {
-            "name": "else_choice",
+            "name": "prog",
             "lineno": self.lexer.lineno,
             # "st": SyntaxTreeUtil.create_node(p),
             "ast": Empty(self.lexer.lineno)
@@ -34,30 +34,44 @@ class Grammar(object):
         config.ast = p[0]["ast"]
 
     def p_func(self, p):
-        '''func : DEF type vector_type_choice iden LPAREN flist RPAREN func_choice'''
+        '''func : DEF type iden LPAREN flist RPAREN func_choice'''
         p[0] = {
             "name": "func",
             "lineno": self.lexer.lineno,
             # "st": SyntaxTreeUtil.create_node(p),
-            "ast": Func(p[2]["ast"], p[3]["ast"], p[4]["ast"], p[6]["ast"], p[8]["ast"], self.lexer.lineno)
+            "ast": Func(p[2]["ast"], p[3]["ast"], p[5]["ast"], p[7]["ast"], self.lexer.lineno)
         }
-
-    def p_func_error(self, p):
-        '''func : DEF type vector_type_choice iden LPAREN error RPAREN func_choice'''
+    
+    
+    def p_func_error1(self, p):
+        '''func : DEF type iden LPAREN error RPAREN func_choice'''
         p[0] = {
             "name": "func",
             "lineno": self.lexer.lineno,
             # "st": SyntaxTreeUtil.create_node(p),
-            "ast": Func(p[2]["ast"], p[3]["ast"], p[4]["ast"], p[6], p[8]["ast"], self.lexer.lineno)
+            "ast": Func(p[2]["ast"], p[3]["ast"], p[5], p[7]["ast"], self.lexer.lineno)
         }
-
+        # self.p_error()
         self.parser_messages.add_message(
             {"message": "Suitable parameters wasn't defined", "lineno": self.lines_we_corrected.pop(), "is_warning": True})
+    
+    def p_func_error2(self, p):
+        '''func : DEF error iden LPAREN flist RPAREN func_choice'''
+        p[0] = {
+            "name": "func",
+            "lineno": self.lexer.lineno,
+            # "st": SyntaxTreeUtil.create_node(p),
+            "ast": Func(Type("null", None, self.lexer.lineno), p[3]["ast"], p[5]["ast"], p[7]["ast"], self.lexer.lineno)
+        }
+        # self.p_error()
+        self.parser_messages.add_message(
+            {"message": "Type must be on of 'int', 'str', 'vector<int>', 'vector<str>'", "lineno": self.lines_we_corrected.pop(), "is_warning": True})
 
+    
     def p_func_choice1(self, p):
         '''func_choice : LBRACE body RBRACE'''
         p[0] = {
-            "name": "func",
+            "name": "func_choice",
             "lineno": self.lexer.lineno,
             # "st": SyntaxTreeUtil.create_node(p),
             "ast": FuncChoice1(p[2]["ast"], self.lexer.lineno)
@@ -66,7 +80,7 @@ class Grammar(object):
     def p_func_choice2(self, p):
         '''func_choice : RETURN expr SEMICOLON'''
         p[0] = {
-            "name": "func",
+            "name": "func_choice",
             "lineno": self.lexer.lineno,
             # "st": SyntaxTreeUtil.create_node(p),
             "ast": FuncChoice2(p[2]["ast"], self.lexer.lineno)
@@ -75,7 +89,7 @@ class Grammar(object):
     def p_body1(self, p):
         '''body : empty'''
         p[0] = {
-            "name": "else_choice",
+            "name": "body",
             "lineno": self.lexer.lineno,
             # "st": SyntaxTreeUtil.create_node(p),
             "ast": Empty(self.lexer.lineno)
@@ -270,61 +284,31 @@ class Grammar(object):
         }
 
     def p_defvar(self, p):
-        '''defvar : VAR type vector_type_choice iden defvar_choice'''
+        '''defvar : VAR type iden defvar_choice'''
         p[0] = {
             "name": "defvar",
             "lineno": self.lexer.lineno,
             # "st": SyntaxTreeUtil.create_node(p),
-            "ast": Defvar(p[2]["ast"], p[3]["ast"], p[4]["ast"], p[5]["ast"], self.lexer.lineno)
+            "ast": Defvar(p[2]["ast"], p[3]["ast"], p[4]["ast"], self.lexer.lineno)
         }
 
     def p_defvar_error(self, p):
-        '''defvar : VAR error vector_type_choice iden defvar_choice'''
+        '''defvar : VAR error iden defvar_choice'''
         p[0] = {
             "name": "defvar",
             "lineno": self.lexer.lineno,
             # "st": SyntaxTreeUtil.create_node(p),
-            "ast": Defvar(p[2], p[3]["ast"], p[4]["ast"], p[5]["ast"], self.lexer.lineno)
+            "ast": Defvar(Type("null", None, self.lexer.lineno), p[3]["ast"], p[4]["ast"], self.lexer.lineno)
         }
 
         self.parser_messages.add_message(
-            {"message": "Type must be one of int, vector, string", "lineno": self.lines_we_corrected.pop(), "is_warning": True})
-    
-    
-    def p_vector_type_choice1(self, p):
-        '''vector_type_choice : empty'''
-        p[0] = {
-            "name": "else_choice",
-            "lineno": self.lexer.lineno,
-            # "st": SyntaxTreeUtil.create_node(p),
-            "ast": Empty(self.lexer.lineno)
-        }
+            {"message": "Type must be on of 'int', 'str', 'vector<int>', 'vector<str>'", "lineno": self.lines_we_corrected.pop(), "is_warning": True})
 
-    
-    def p_vector_type_choice2(self, p):
-        '''vector_type_choice : LT type GT'''
-        p[0] = {
-            "name": "defvar",
-            "lineno": self.lexer.lineno,
-            # "st": SyntaxTreeUtil.create_node(p),
-            "ast": VectorTypeChoice2(p[2]["ast"], self.lexer.lineno)
-        }
-    
-    def p_vector_type_choice2_error(self, p):
-        '''vector_type_choice : LT error GT'''
-        p[0] = {
-            "name": "defvar",
-            "lineno": self.lexer.lineno,
-            # "st": SyntaxTreeUtil.create_node(p),
-            "ast": VectorTypeChoice2(p[2], self.lexer.lineno)
-        }
-        self.parser_messages.add_message(
-            {"message": "Type must be one of int, string", "lineno": self.lines_we_corrected.pop(), "is_warning": True})
     
     def p_defvar_choice1(self, p):
         '''defvar_choice : empty'''
         p[0] = {
-            "name": "else_choice",
+            "name": "defvar_choice",
             "lineno": self.lexer.lineno,
             # "st": SyntaxTreeUtil.create_node(p),
             "ast": Empty(self.lexer.lineno)
@@ -333,7 +317,7 @@ class Grammar(object):
     def p_defvar_choice2(self, p):
         '''defvar_choice : ASSIGN expr'''
         p[0] = {
-            "name": "defvar",
+            "name": "defvar_choice",
             "lineno": self.lexer.lineno,
             # "st": SyntaxTreeUtil.create_node(p),
             "ast": DefvarChoice2(p[2]["ast"], self.lexer.lineno)
@@ -342,28 +326,46 @@ class Grammar(object):
     def p_flist1(self, p):
         '''flist : empty'''
         p[0] = {
-            "name": "else_choice",
+            "name": "flist",
             "lineno": self.lexer.lineno,
             # "st": SyntaxTreeUtil.create_node(p),
             "ast": Empty(self.lexer.lineno)
         }
 
     def p_flist2(self, p):
-        '''flist : type vector_type_choice iden'''
+        '''flist : type iden'''
         p[0] = {
             "name": "flist",
             "lineno": self.lexer.lineno,
             # "st": SyntaxTreeUtil.create_node(p),
-            "ast": Flist2(p[1]["ast"], p[2]["ast"], p[3]["ast"], self.lexer.lineno)
+            "ast": Flist2(p[1]["ast"], p[2]["ast"], self.lexer.lineno)
+        }
+
+    def p_flist2_error(self, p):
+        '''flist : error iden'''
+        p[0] = {
+            "name": "flist",
+            "lineno": self.lexer.lineno,
+            # "st": SyntaxTreeUtil.create_node(p),
+            "ast": Flist2(Type("null", None, self.lexer.lineno), p[2]["ast"], self.lexer.lineno)
         }
 
     def p_flist3(self, p):
-        '''flist : type vector_type_choice iden COMMA flist'''
+        '''flist : type iden COMMA flist'''
         p[0] = {
             "name": "flist",
             "lineno": self.lexer.lineno,
             # "st": SyntaxTreeUtil.create_node(p),
-            "ast": Flist3(p[1]["ast"], p[2]["ast"], p[3]["ast"], p[5]["ast"], self.lexer.lineno)
+            "ast": Flist3(p[1]["ast"], p[2]["ast"], p[4]["ast"], self.lexer.lineno)
+        }
+    
+    def p_flist3_error(self, p):
+        '''flist : error iden COMMA flist'''
+        p[0] = {
+            "name": "flist",
+            "lineno": self.lexer.lineno,
+            # "st": SyntaxTreeUtil.create_node(p),
+            "ast": Flist3(Type("null", None, self.lexer.lineno), p[2]["ast"], p[4]["ast"], self.lexer.lineno)
         }
 
     def p_clist1(self, p):
@@ -539,17 +541,57 @@ class Grammar(object):
             "ast": Expr9(p[1]["ast"], self.lexer.lineno)
         }
 
-    def p_type(self, p):
+    def p_type1(self, p):
         '''type : INT_TYPE
-                | VECTOR_TYPE
                 | STR_TYPE
                 | NULL_TYPE'''
         p[0] = {
             "name": "type",
             "lineno": self.lexer.lineno,
             # "st": SyntaxTreeUtil.create_node(p),
-            "ast": Type(p[1], self.lexer.lineno)
+            "ast": Type(p[1], None, self.lexer.lineno)
         }
+    
+    def p_type2(self, p):
+        '''type : VECTOR_TYPE LT INT_TYPE GT 
+                | VECTOR_TYPE LT STR_TYPE GT'''
+        
+        p[0] = {
+            "name": "type",
+            "lineno": self.lexer.lineno,
+            # "st": SyntaxTreeUtil.create_node(p),
+            "ast": Type(p[1], p[3], self.lexer.lineno)
+        }
+    
+    def p_type2_error1(self, p):
+        '''type : VECTOR_TYPE LT INT_TYPE error 
+                | VECTOR_TYPE error INT_TYPE GT
+                | VECTOR_TYPE error INT_TYPE error
+                | VECTOR_TYPE LT STR_TYPE error
+                | VECTOR_TYPE error STR_TYPE GT
+                | VECTOR_TYPE error STR_TYPE error'''
+        
+        p[0] = {
+            "name": "type",
+            "lineno": self.lexer.lineno,
+            # "st": SyntaxTreeUtil.create_node(p),
+            "ast": Type(p[1], p[3], self.lexer.lineno)
+        }
+        self.parser_messages.add_message(
+            {"message": "Vector type must be on of 'vector<int>', 'vector<str>'", "lineno": self.lines_we_corrected.pop(), "is_warning": True})
+    
+    def p_type2_error2(self, p):
+        '''type : VECTOR_TYPE LT error GT '''
+        
+        p[0] = {
+            "name": "vector_type",
+            "lineno": self.lexer.lineno,
+            # "st": SyntaxTreeUtil.create_node(p),
+            "ast": Type(p[1], "null", self.lexer.lineno)
+        }
+        self.parser_messages.add_message(
+            {"message": "Vector type must be on of 'vector<int>', 'vector<str>'", "lineno": self.lines_we_corrected.pop(), "is_warning": True})
+
 
     def p_iden(self, p):
         '''iden : IDENTIFIER'''

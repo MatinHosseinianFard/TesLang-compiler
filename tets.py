@@ -1,5 +1,8 @@
-l = []
+import re
 
-l[0] = 1
+def test(A):
+    print(A[0])
 
-print(l)
+x = []
+
+test(x)

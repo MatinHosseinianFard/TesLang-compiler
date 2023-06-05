@@ -1,6 +1,6 @@
-def vector<string> main() {
+def vector<str> main() {
     
-    def vector<int> find(vector<string> b) {
+    def vector<int> find(vector<str> b) {
         return j;
     }
     var vector<int> A;
@@ -10,7 +10,7 @@ def vector<string> main() {
     
     
     var int k;
-    var vector<string> z;
+    var vector<str> z;
     k = find(z);
     A[0] = 1;
     A[1] = 2;

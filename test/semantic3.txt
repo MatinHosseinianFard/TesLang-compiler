@@ -1,0 +1,5 @@
+
+def int main() {
+    var int A = 1 = 2;
+    return A;
+}

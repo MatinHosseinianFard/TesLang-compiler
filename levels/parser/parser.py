@@ -5,4 +5,4 @@ class Parser(object):
         self.parser = yacc.yacc(debug=True, module= grammar)
 
     def build(self, data):
-        self.parser.parse(data, debug=True)
+        self.parser.parse(data, debug=False)

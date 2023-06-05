@@ -1,4 +1,5 @@
 from sys import maxsize
+
 class Symbol:
     def __init__(self, name, type):
         self.name = name
@@ -43,6 +44,12 @@ class SymbolTable:
         else:
             self.symbols[symbol.name] = symbol
             return True
+        
+    def is_exist(self, name):
+        if name in self.symbols:
+            return True
+        else:
+            return False
 
     def get(self, name, check_parent=True, ckeck_children=False):
         if name in self.symbols:
@@ -51,6 +58,7 @@ class SymbolTable:
             return self.parent.get(name)
         else:
             return None
+        
 
     def getParentScope(self):
         return self.parent

@@ -70,7 +70,7 @@ class Tokens(object):
             'def': 'DEF',
             'int': 'INT_TYPE',
             'vector': 'VECTOR_TYPE',
-            'string': 'STR_TYPE',
+            'str': 'STR_TYPE',
             'null': 'NULL_TYPE',
             'var': 'VAR',
             'return': 'RETURN',
