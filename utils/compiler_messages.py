@@ -60,7 +60,7 @@ class CompilerMessages(object):
             
             if "is_warning" in msg:
                 if msg['message'] != "":
-                    Colorprints.print_in_yellow(f"=> {msg['message']}")
+                    Colorprints.print_in_red(f"=> {msg['message']}")
                     
             else:
                 Colorprints.print_in_cyan(f"{msg['lineno']}: ", end="")

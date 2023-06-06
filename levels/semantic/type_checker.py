@@ -72,10 +72,10 @@ class TypeChecker(NodeVisitor):
 
         if iden_symbol != expr1_type['type']:
             self.semantic_messages.add_message(
-                {"message": f"Two sides of '=' must be 'int'! expr1 is of type: '{iden_symbol}' and expr2 is of type: '{expr1_type['type']}'", "lineno": node.expr1.lineno})
+                {"message": f"Two sides of '=' must be 'int'! {expr1_type['id_value']} is '{iden_symbol}' and {expr2_type['id_value']} is '{expr2_type['type']}'", "lineno": node.expr1.lineno})
         elif iden_symbol != expr2_type['values_type']:
             self.semantic_messages.add_message(
-                {"message": f"expr2 is not vector of int", "lineno": node.expr2.lineno})
+                {"message": f"{expr2_type['id_value']} must be vector<int>", "lineno": node.expr2.lineno})
 
         self.visit(node.stmt, for_block_symbol_table)
 
@@ -94,14 +94,14 @@ class TypeChecker(NodeVisitor):
             if "vector" in function_type:
                 if expr["type"] != function_type[0]:
                     self.semantic_messages.add_message(
-                        {"message": f"Returning wrong type for function '{function_name}'. must return: '{function_type[0]}<{function_type[1]}>', you're returning: '{expr['type']}'", "lineno": node.expr.lineno})
+                        {"message": f"Returning wrong type for function '{function_name}'. must return : '{function_type[0]}<{function_type[1]}>', you're returning : '{expr['type']}'", "lineno": node.expr.lineno})
                 elif expr["values_type"] != function_type[1]:
                     self.semantic_messages.add_message(
-                        {"message": f"Returning wrong type for function '{function_name}'. must return: '{function_type[0]}<{function_type[1]}>', you're returning: '{expr['type']}<{expr['values_type']}>'", "lineno": node.expr.lineno})
+                        {"message": f"Returning wrong type for function '{function_name}'. must return : '{function_type[0]}<{function_type[1]}>', you're returning : '{expr['type']}<{expr['values_type']}>'", "lineno": node.expr.lineno})
 
             elif expr["type"] != function_type[0]:
                 self.semantic_messages.add_message(
-                    {"message": f"Returning wrong type for function '{function_name}'. must return: '{function_type[0]}', you're returning: '{expr['type']}'", "lineno": node.expr.lineno})
+                    {"message": f"Returning wrong type for function '{function_name}'. must return : '{function_type[0]}', you're returning : '{expr['type']}'", "lineno": node.expr.lineno})
         # did'nt found the corresponding function to this return
         else:
             self.semantic_messages.add_message(
@@ -131,7 +131,7 @@ class TypeChecker(NodeVisitor):
 
                         if expr["arguments"] == "not_same":
                             self.semantic_messages.add_message(
-                                {"message": f"All vector values must be of type: {vector_type} But the types are different here : {expr['arguments']}", "lineno": node.vector_type_choice.lineno})
+                                {"message": f"All vector values must be {vector_type}, But the types are different here : {expr['arguments']}", "lineno": node.vector_type_choice.lineno})
                             error = True
                         if expr["arguments"] == "empty":
                             self.semantic_messages.add_message(
@@ -143,7 +143,7 @@ class TypeChecker(NodeVisitor):
                             error = True
                         if vector_type != expr["arguments"][0]:
                             self.semantic_messages.add_message(
-                                {"message": f"All vector values must be of type: '{vector_type}' But the types are different here : {expr['arguments']}", "lineno": node.vector_type_choice.lineno})
+                                {"message": f"All vector values must be '{vector_type}', But the types are different here : {expr['arguments']}", "lineno": node.vector_type_choice.lineno})
                             error = True
 
                         if not error:
@@ -153,7 +153,7 @@ class TypeChecker(NodeVisitor):
                             table.put(VariableSymbol(name, "null"))
                     else:
                         self.semantic_messages.add_message(
-                            {"message": f"Two sides of '=' must be of same type! identifier is of type: 'vector<{vector_type}>' and experssions is of type: '{expr['type']}'", "lineno": node.defvar_choice.lineno})
+                            {"message": f"Two sides of '=' must be of same type! identifier is 'vector<{vector_type}>' and experssions is '{expr['type']}'", "lineno": node.defvar_choice.lineno})
 
             else:
                 table.put(VariableSymbol(name, type))
@@ -161,7 +161,7 @@ class TypeChecker(NodeVisitor):
                 if expr != "empty_rule":
                     if type != expr["type"]:
                         self.semantic_messages.add_message(
-                            {"message": f"Two sides of '=' must be of same type! identifier is of type: '{type}' and experssions is of type: '{expr['type']}'", "lineno": node.defvar_choice.lineno})
+                            {"message": f"Two sides of '=' must be of same type! identifier is '{type}' and experssions is '{expr['type']}'", "lineno": node.defvar_choice.lineno})
         else:
             self.semantic_messages.add_message(
                 {"message": f"'{name}' already defined", "lineno": node.iden.lineno})
@@ -178,7 +178,7 @@ class TypeChecker(NodeVisitor):
                 return {"id_value" : vector_iden["id_value"],"type": vector_iden["values_type"], "values_type": vector_iden["values_type"]}
             else:
                 self.semantic_messages.add_message(
-                    {"message": f'{node.expr2.lineno}: index of the vector must be of type \'int\'!', "lineno": node.expr2.lineno})
+                    {"message": f'{node.expr2.lineno}: index of the vector must be \'int\'!', "lineno": node.expr2.lineno})
                 return {"id_value": vector_iden["id_value"], "type": "null", "values_type": "null"}
 
         else:
@@ -222,15 +222,15 @@ class TypeChecker(NodeVisitor):
 
         # dynamic type error handling! null type can be converted to Int or vector!
         # if operator is "=", assignment and first operand is a iden of type "null" you can assign anything to it
-        if operator == "=" and first_operand["type"] == "null" and second_operand["type"] != "null" and first_operand_is_iden:
-            first_operand_name = node.expr1.iden.iden_value
-            first_operand_symbol = table.get(first_operand_name)
-            if first_operand_symbol:
-                first_operand_symbol.type = second_operand["type"]
-                first_operand = second_operand
-                return second_operand
-            else:
-                return {"id_value": id_value, "type": "null", "values_type": "null"}
+        # if operator == "=" and first_operand["type"] == "null" and second_operand["type"] != "null" and first_operand_is_iden:
+        #     first_operand_name = node.expr1.iden.iden_value
+        #     first_operand_symbol = table.get(first_operand_name)
+        #     if first_operand_symbol:
+        #         first_operand_symbol.type = second_operand["type"]
+        #         first_operand = second_operand
+        #         return second_operand
+        #     else:
+        #         return {"id_value": id_value, "type": "null", "values_type": "null"}
 
 
         if first_operand["type"] != second_operand["type"]:
@@ -258,7 +258,7 @@ class TypeChecker(NodeVisitor):
             return {"id_value": operand["operand"], "type": "int", "values_type": "int"}
         else:
             self.semantic_messages.add_message(
-                {"message": f"The operand of the '{operator}' must be of type 'int'", "lineno": node.expr.lineno})
+                {"message": f"The operand of the '{operator}' must be 'int'", "lineno": node.expr.lineno})
             return {"id_value": operand["operand"], "type": "null", "values_type": "null"}
 
     def visit_Expr6(self, node, table):
@@ -269,9 +269,9 @@ class TypeChecker(NodeVisitor):
                 {"message": f"Variable '{node.iden.iden_value}' is not defined", "lineno": node.iden.lineno})
 
             # for error handling we should create that var
-            # new_declared_symbol_for_error_handling = VariableSymbol(node.iden.iden_value, "null")
-            # table.put(new_declared_symbol_for_error_handling)
-            return {"id_value": iden_type["id_value"],"type": "null", "values_type": "null"}
+            new_declared_symbol_for_error_handling = VariableSymbol(node.iden.iden_value, "null")
+            table.put(new_declared_symbol_for_error_handling)
+            return {"id_value": iden_type["id_value"], "type": "null", "values_type": "null"}
 
         return iden_type
 
@@ -361,7 +361,6 @@ class TypeChecker(NodeVisitor):
 
     def visit_Clist1(self, node, table):
         pass
-        # return {"type": "null", "values_type": "null"}
 
     def visit_Clist2(self, node, table):
         return self.visit(node.expr, table)

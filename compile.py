@@ -33,7 +33,6 @@ class Compiler(object):
         # self.lexer.build(data)
 
         self.parser.build(data)
-        # print(self.lines_we_corrected)
         if print_messages:
             if self.lexer_messages.errors == 0:
                 Colorprints.print_in_green(f"***No lexer errors!***")
@@ -57,7 +56,6 @@ class Compiler(object):
         
         #semantic
         self.preprocess.visit(config.ast, None)
-        # print(config.global_symbol_table)
         self.type_checker.visit(config.ast, None)
         #semantic errors
         if print_messages:

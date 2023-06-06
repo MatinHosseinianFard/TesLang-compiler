@@ -40,13 +40,13 @@ class PreProcess(NodeVisitor):
             if not function_body_table.is_exist(name):
                 if "vector" in par["type"]:
                     vector_type = par["type"].split(" ")[1]
-                    function_body_table.put(VectorSymbol(name, vector_type))   
+                    function_body_table.put(VectorSymbol(name, vector_type))
                 else:
                     type = par["type"]
                     function_body_table.put(VariableSymbol(name, type))
             else:
                 self.semantic_messages.add_message(
-                                            {"message": f"'{name}' already defined", "lineno": node.flist.lineno})
+                    {"message": f"'{name}' already defined", "lineno": node.flist.lineno})
 
         self.visit(node.func_choice, function_body_table)
 
@@ -60,11 +60,11 @@ class PreProcess(NodeVisitor):
         self.visit(node.stmt, table)
         self.visit(node.body, table)
 
-    # def visit_Stmt1(self, node, table):
-    #     pass
+    def visit_Stmt1(self, node, table):
+        pass
 
     def visit_Stmt2(self, node, table):
-        self.visit(node.defvar, table)
+        pass
 
     def visit_Stmt3(self, node, table):
         if_block_symbol_table = SymbolTable(
@@ -92,8 +92,8 @@ class PreProcess(NodeVisitor):
         for_block_symbol_table.put(iden)
         self.visit(node.stmt, for_block_symbol_table)
 
-    # def visit_Stmt6(self, node, table):
-    #     pass
+    def visit_Stmt6(self, node, table):
+        pass
 
     def visit_Stmt7(self, node, table):
         body_block_symbol_table = SymbolTable(
@@ -103,62 +103,8 @@ class PreProcess(NodeVisitor):
     def visit_Stmt8(self, node, table):
         self.visit(node.func, table)
 
-    # def visit_Defvar(self, node, table):
-    #     pass
-
-    # def visit_DefvarChoice2(self, node, table):
-    #     pass
-
-    # def visit_Expr1(self, node, table):
-    #     pass
-
-    # def visit_Expr2(self, node, table):
-    #     pass
-
-    # def visit_Expr3(self, node, table):
-    #     pass
-
-    # def visit_Expr4(self, node, table):
-    #     pass
-
-    # def visit_Expr5(self, node, table):
-    #     pass
-
-    # def visit_Expr6(self, node, table):
-    #     pass
-
-    # def visit_Expr7(self, node, table):
-    #     pass
-
-    # def visit_Expr8(self, node, table):
-    #     pass
-
-    # def visit_Expr9(self, node, table):
-    #     pass
-
-    # def visit_Clist1(self, node, table):
-    #     pass
-
-    # def visit_Clist2(self, node, table):
-    #     pass
-
-    # def visit_Clist3(self, node, table):
-    #     pass
-    
-    # def visit_Type(self, node, table):
-    #     pass
-
-    # def visit_Iden(self, node, table):
-    #     pass
-
-    # def visit_Str(self, node, table):
-    #     pass
-
-    # def visit_Num(self, node, table):
-    #     pass
-
-    # def visit_Empty(self, node, table):
-    #     pass
+    def visit_Empty(self, node, table):
+        pass
 
     def create_and_push_builtin_funcs(self, table):
         scan_function_symbol = FunctionSymbol(name="scan",
@@ -196,14 +142,16 @@ class PreProcess(NodeVisitor):
                 type = flist.type.type_value
                 if type == "vector":
                     type += " " + flist.type.vector_type_value
-                parameters.append({"iden_value": flist.iden.iden_value, "type": type})
+                parameters.append(
+                    {"iden_value": flist.iden.iden_value, "type": type})
             while hasattr(flist, "flist"):
                 flist = flist.flist
                 if (not isinstance(flist, ast.Empty)):
                     type = flist.type.type_value
                     if type == "vector":
                         type += " " + flist.type.vector_type_value
-                    parameters.append({"iden_value": flist.iden.iden_value, "type": type})
+                    parameters.append(
+                        {"iden_value": flist.iden.iden_value, "type": type})
 
         parameters.reverse()
         return parameters
