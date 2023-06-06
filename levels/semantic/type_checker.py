@@ -73,9 +73,9 @@ class TypeChecker(NodeVisitor):
         if iden_symbol != expr1_type['type']:
             self.semantic_messages.add_message(
                 {"message": f"Two sides of '=' must be 'int'! {expr1_type['id_value']} is '{iden_symbol}' and {expr2_type['id_value']} is '{expr2_type['type']}'", "lineno": node.expr1.lineno})
-        elif iden_symbol != expr2_type['values_type']:
+        elif iden_symbol != expr2_type['type']:
             self.semantic_messages.add_message(
-                {"message": f"{expr2_type['id_value']} must be vector<int>", "lineno": node.expr2.lineno})
+                {"message": f"Type {expr2_type['id_value']} must be int", "lineno": node.expr2.lineno})
 
         self.visit(node.stmt, for_block_symbol_table)
 
@@ -303,7 +303,7 @@ class TypeChecker(NodeVisitor):
                 if isinstance(par_type, list):
                     inconsistent = 0 
                     for par in par_type:
-                        if "vector" in par_type:
+                        if "vector" in par:
                             if arg_type != par:
                                 inconsistent += 1
                                 expected += f"'vector<{par.split(' ')[1]}>' or "

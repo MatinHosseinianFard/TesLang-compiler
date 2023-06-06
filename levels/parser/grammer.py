@@ -19,6 +19,8 @@ class Grammar(object):
             "lineno": self.lexer.lineno,
             "ast": Empty(self.lexer.lineno)
         }
+        config.ast = p[0]["ast"]
+
 
     def p_prog2(self, p):
         '''prog : func prog'''

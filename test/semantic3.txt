@@ -1,5 +1,7 @@
-
 def int main() {
-    var int A = 1 = 2;
+    var str n;
+    for (i = 0 to length(n)) {
+        j = j + 1;
+    }
     return A;
 }
