@@ -1,7 +1,7 @@
 def int find(vector<int> A, int n) {
     var int k;
     var float j;
-    for (i = 0 to length(A)) {
+    for (i = 0 to length(A))) {
         if (n == k) {
             return j;
         }
