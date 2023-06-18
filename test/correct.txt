@@ -1,0 +1,13 @@
+def int add(int a, int b) {
+    var int result;
+    result = a + b;
+    return result;
+}
+def int main() {
+    var int a;
+    var int b;
+    a = scan();
+    b = scan();
+    print(add(a, b));
+    return 0;
+}

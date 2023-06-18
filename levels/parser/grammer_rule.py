@@ -1,5 +1,5 @@
 def p_prog1(self, p):
-        '''prog : empty'''
+    '''prog : empty'''
         
 def p_prog2(self, p):
     '''prog : func prog'''
