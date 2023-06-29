@@ -38,26 +38,42 @@ class SymbolTable:
         if parent:
             parent.children.append(self)
 
+    # Function to add a symbol to the symbols dictionary
     def put(self, symbol):
+        # Check if the symbol name is already in the symbols dictionary
         if symbol.name in self.symbols:
+            # If the symbol exists, return False
             return False
         else:
+            # If the symbol doesn't exist, add it to the symbols dictionary
             self.symbols[symbol.name] = symbol
+            # Return True to indicate successful addition of the symbol
             return True
-        
+    
+    # Function to check if a symbol exists in the symbols dictionary
     def is_exist(self, name):
+        # Check if the symbol name is in the symbols dictionary
         if name in self.symbols:
+            # If the symbol exists, return True
             return True
         else:
+            # If the symbol doesn't exist, return False
             return False
-
-    def get(self, name, check_parent=True, ckeck_children=False):
+    
+    # Function to get a symbol from the symbols dictionary
+    def get(self, name, check_parent=True, check_children=False):
+        # Check if the symbol name is in the symbols dictionary
         if name in self.symbols:
+            # If the symbol exists, return it
             return self.symbols[name]
         elif check_parent and self.parent:
+            # If the symbol doesn't exist in the current dictionary but check_parent is enabled and a parent dictionary exists,
+            # recursively call the get function on the parent dictionary
             return self.parent.get(name)
         else:
+            # If the symbol doesn't exist and there are no parents to check, return None
             return None
+    
         
 
     def getParentScope(self):
