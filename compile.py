@@ -103,7 +103,7 @@ class Compiler(object):
                 Colorprints.print_in_red("!!! Compile failed :( !!!")
 
 if __name__ == '__main__':
-    with open("./test/correct.txt") as f:
+    with open("./test/semantic.txt") as f:
     # with open("./test/nested_func.txt") as f:
         data = f.read()
         f.close()
