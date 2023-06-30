@@ -20,4 +20,31 @@ Additional Features:
 - **Scope**: The compiler manages variable scoping, ensuring that variables are properly declared and accessed within their respective scopes.
 - **Nested Functions**: The Teslang language supports nested functions, and the compiler handles their parsing, scoping, and code generation.
 
+## Usage
+
+To use the Teslang compiler, follow these steps:
+
+1. Clone the repository:
+```https://github.com/MatinHosseinianFard/TesLang-compiler.git```
+
+2. Create a virtual environment:
+‍‍‍‍```python3 -m venv venv```
+
+3. Activate the virtual environment
+
+4. Install the required dependencies:
+```pip install -r requirements.txt```
+
+5. Execute the `compile.py` file to compile the Teslang source code:
+```python compile.py```
+
+After the compilation process is complete, the intermediate code will be generated in the `generated_IR.out` file. You can execute this intermediate code using the Teslang Virtual Machine (tsvm) available at [https://github.com/aligrudi/tsvm](https://github.com/aligrudi/tsvm).
+
+To execute the intermediate code using tsvm, follow these steps:
+
+1. Download and compile the `tsvm.c` file.
+2. Run the compiled `tsvm` executable with the following command:
+```tsvm generated_IR.out```
+
+
 Thanks to [mtnrzna](https://github.com/mtnrzna)
