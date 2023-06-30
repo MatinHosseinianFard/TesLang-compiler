@@ -15,6 +15,9 @@ The Teslang compiler incorporates the following features:
 Additional Features:
 
 - **Forward Referencing**: The compiler supports forward referencing, allowing references to identifiers before their declaration within the source code.
+
 - **Error Correction and Handling**: The compiler includes mechanisms to detect and handle errors encountered during the compilation process. It provides meaningful error messages to aid in debugging and improving the code.
 - **Scope**: The compiler manages variable scoping, ensuring that variables are properly declared and accessed within their respective scopes.
 - **Nested Functions**: The Teslang language supports nested functions, and the compiler handles their parsing, scoping, and code generation.
+
+Thanks to [mtnrzna](https://github.com/mtnrzna)
