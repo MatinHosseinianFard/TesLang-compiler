@@ -41,8 +41,6 @@ class TypeChecker(NodeVisitor):
         # Visits the 'func_choice' node using the function body block symbol table as the argument.
         self.visit(node.func_choice, function_body_block)
     
-        self.visit(node.func_choice, function_body_block)
-
     def visit_FuncChoice1(self, node, table):
         # The visit_FuncChoice1 method is called when visiting a FuncChoice1 node.
         # It visits the 'body' node using the given symbol table as the argument.
@@ -566,60 +564,60 @@ class TypeChecker(NodeVisitor):
         return parameters
     
 
-# Function to get arguments from a node
-def get_arguments(self, node, table):
-    # Initialize an empty list for arguments
-    arguments = [[], []]
+    # Function to get arguments from a node
+    def get_arguments(self, node, table):
+        # Initialize an empty list for arguments
+        arguments = [[], []]
 
-    # Get the clist from the node
-    clist = node.clist
+        # Get the clist from the node
+        clist = node.clist
 
-    # If clist is a LexToken, return the empty arguments list
-    if isinstance(clist, LexToken):
+        # If clist is a LexToken, return the empty arguments list
+        if isinstance(clist, LexToken):
+            return arguments
+
+        # Check if clist is not an Empty ast node
+        if not isinstance(clist, ast.Empty):
+            # Check if clist has an expr
+            if clist.expr:
+                # Visit the clist and get the result
+                result = self.visit(clist, table)
+
+                # Check if the result is not a string and is truthy
+                if not isinstance(result, str) and result:
+                    # Get the type of the argument
+                    arg_type = result["type"]
+
+                    # Check if the type is "vector" and append the values_type to arg_type
+                    if result["type"] == "vector":
+                        arg_type += f" {result['values_type']}"
+
+                    # Append the type and id_value of the argument to arguments
+                    arguments[0].append(arg_type)
+                    arguments[1].append(result["id_value"])
+
+                # Loop until clist does not have a clist attribute
+                while hasattr(clist, "clist"):
+                    clist = clist.clist
+
+                    # Check if clist is not an Empty ast node
+                    if (not isinstance(clist, ast.Empty)):
+                        # Visit the clist and get the result
+                        result = self.visit(clist, table)
+
+                        # Check if the result is not a string
+                        if not isinstance(result, str):
+                            # Get the type of the argument
+                            arg_type = result["type"]
+
+                            # Check if the type is "vector" and append the values_type to arg_type
+                            if result["type"] == "vector":
+                                arg_type += f" {result['values_type']}"
+
+                            # Append the type and id_value of the argument to arguments
+                            arguments[0].append(arg_type)
+                            arguments[1].append(result["id_value"])
+
+        # Return the arguments list
         return arguments
-
-    # Check if clist is not an Empty ast node
-    if not isinstance(clist, ast.Empty):
-        # Check if clist has an expr
-        if clist.expr:
-            # Visit the clist and get the result
-            result = self.visit(clist, table)
-
-            # Check if the result is not a string and is truthy
-            if not isinstance(result, str) and result:
-                # Get the type of the argument
-                arg_type = result["type"]
-
-                # Check if the type is "vector" and append the values_type to arg_type
-                if result["type"] == "vector":
-                    arg_type += f" {result['values_type']}"
-
-                # Append the type and id_value of the argument to arguments
-                arguments[0].append(arg_type)
-                arguments[1].append(result["id_value"])
-
-            # Loop until clist does not have a clist attribute
-            while hasattr(clist, "clist"):
-                clist = clist.clist
-
-                # Check if clist is not an Empty ast node
-                if (not isinstance(clist, ast.Empty)):
-                    # Visit the clist and get the result
-                    result = self.visit(clist, table)
-
-                    # Check if the result is not a string
-                    if not isinstance(result, str):
-                        # Get the type of the argument
-                        arg_type = result["type"]
-
-                        # Check if the type is "vector" and append the values_type to arg_type
-                        if result["type"] == "vector":
-                            arg_type += f" {result['values_type']}"
-
-                        # Append the type and id_value of the argument to arguments
-                        arguments[0].append(arg_type)
-                        arguments[1].append(result["id_value"])
-
-    # Return the arguments list
-    return arguments
 
